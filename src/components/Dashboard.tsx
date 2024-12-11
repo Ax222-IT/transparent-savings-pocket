@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DollarSign, PiggyBank, Calendar, CreditCard, Plus } from "lucide-react";
+import { DollarSign, PiggyBank, Calendar, CreditCard, Plus, Flag } from "lucide-react";
 import { useState } from "react";
 import { BudgetForm } from "./BudgetForm";
 import { ExpenseCalendar } from "./ExpenseCalendar";
@@ -43,9 +43,12 @@ export const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600">Total Savings</p>
-            <h2 className="text-3xl font-bold animate-number-scroll">
-              CHF {totalSavings.toLocaleString()}
-            </h2>
+            <div className="flex items-center space-x-2">
+              <Flag className="w-5 h-5 text-red-500" />
+              <h2 className="text-3xl font-bold animate-number-scroll">
+                CHF {totalSavings.toLocaleString()}
+              </h2>
+            </div>
           </div>
           <DollarSign className="w-12 h-12 text-gold-300" />
         </div>
