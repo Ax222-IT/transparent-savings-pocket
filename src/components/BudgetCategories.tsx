@@ -52,7 +52,7 @@ export const BudgetCategories = () => {
                 <category.icon className={`w-5 h-5 ${category.color}`} />
                 <span className="font-medium">{category.name}</span>
               </div>
-              <span className="font-semibold">${category.amount.toLocaleString()}</span>
+              <span className="font-semibold">CHF {category.amount.toLocaleString()}</span>
             </div>
             <Progress value={category.progress} className="h-2" />
           </div>
