@@ -1,14 +1,23 @@
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
+import { BudgetData } from "./Dashboard";
 
-export const ExpenseCalendar = () => {
+type ExpenseCalendarProps = {
+  expenses: BudgetData[];
+};
+
+export const ExpenseCalendar = ({ expenses }: ExpenseCalendarProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [expenses] = useState<{ [key: string]: number }>({
-    "2024-03-15": 120,
-    "2024-03-16": 45,
-    "2024-03-17": 89,
-  });
+
+  // Convert expenses array to a map of date strings to total amounts
+  const expensesByDate = expenses.reduce((acc, expense) => {
+    if (expense.date) {
+      const dateStr = expense.date.toISOString().split('T')[0];
+      acc[dateStr] = (acc[dateStr] || 0) + Number(expense.amount);
+    }
+    return acc;
+  }, {} as { [key: string]: number });
 
   return (
     <Card className="p-6">
@@ -21,7 +30,7 @@ export const ExpenseCalendar = () => {
         modifiers={{
           hasExpense: (date) => {
             const dateStr = date.toISOString().split("T")[0];
-            return dateStr in expenses;
+            return dateStr in expensesByDate;
           },
         }}
         modifiersStyles={{
@@ -38,7 +47,7 @@ export const ExpenseCalendar = () => {
             Expenses for {date.toLocaleDateString()}:
           </p>
           <p className="text-lg font-semibold">
-            ${expenses[date.toISOString().split("T")[0]]?.toLocaleString() || 0}
+            CHF {expensesByDate[date.toISOString().split("T")[0]]?.toLocaleString() || 0}
           </p>
         </div>
       )}

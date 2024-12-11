@@ -1,5 +1,4 @@
 import { Dashboard } from "@/components/Dashboard";
-import { ExpenseCalendar } from "@/components/ExpenseCalendar";
 import { BudgetCategories } from "@/components/BudgetCategories";
 
 const Index = () => {
@@ -11,7 +10,6 @@ const Index = () => {
             <Dashboard />
             <BudgetCategories />
           </div>
-          <ExpenseCalendar />
         </div>
       </div>
     </div>

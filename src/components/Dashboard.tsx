@@ -3,17 +3,28 @@ import { Button } from "@/components/ui/button";
 import { DollarSign, PiggyBank, Calendar, CreditCard, Plus } from "lucide-react";
 import { useState } from "react";
 import { BudgetForm } from "./BudgetForm";
+import { ExpenseCalendar } from "./ExpenseCalendar";
+
+export type BudgetData = {
+  amount: string;
+  category: string;
+  description: string;
+  date?: Date;
+};
 
 export const Dashboard = () => {
   const [totalSavings] = useState(2500);
   const [monthlyBudget] = useState(4000);
-  const [expenses] = useState(1500);
+  const [expenses, setExpenses] = useState<BudgetData[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const handleBudgetSubmit = (data: any) => {
-    console.log("Budget data submitted:", data);
-    // Here you would typically update your state or make an API call
+  const handleBudgetSubmit = (data: BudgetData) => {
+    const newData = { ...data, date: new Date() };
+    setExpenses(prev => [...prev, newData]);
+    console.log("Budget data submitted:", newData);
   };
+
+  const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
 
   return (
     <div className="p-6 space-y-6">
@@ -56,7 +67,7 @@ export const Dashboard = () => {
             <CreditCard className="w-6 h-6 text-navy-400" />
             <div>
               <p className="text-sm text-gray-600">Total Expenses</p>
-              <p className="text-xl font-semibold">CHF {expenses.toLocaleString()}</p>
+              <p className="text-xl font-semibold">CHF {totalExpenses.toLocaleString()}</p>
             </div>
           </div>
         </Card>
@@ -67,6 +78,8 @@ export const Dashboard = () => {
         onOpenChange={setIsFormOpen}
         onSubmit={handleBudgetSubmit}
       />
+
+      <ExpenseCalendar expenses={expenses} />
     </div>
   );
 };
