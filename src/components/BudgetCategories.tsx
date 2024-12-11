@@ -6,38 +6,38 @@ export const BudgetCategories = () => {
   const categories = [
     {
       name: "Income",
-      amount: 5000,
+      amount: 0,
       icon: DollarSign,
       color: "text-green-500",
-      progress: 100,
+      progress: 0,
     },
     {
       name: "Fixed Costs",
-      amount: 2000,
+      amount: 0,
       icon: Home,
       color: "text-blue-500",
-      progress: 40,
+      progress: 0,
     },
     {
       name: "Variable Costs",
-      amount: 1000,
+      amount: 0,
       icon: ShoppingCart,
       color: "text-orange-500",
-      progress: 20,
+      progress: 0,
     },
     {
       name: "Savings",
-      amount: 1500,
+      amount: 0,
       icon: PiggyBank,
       color: "text-gold-300",
-      progress: 30,
+      progress: 0,
     },
     {
       name: "Donations",
-      amount: 500,
+      amount: 0,
       icon: Heart,
       color: "text-red-500",
-      progress: 10,
+      progress: 0,
     },
   ];
 

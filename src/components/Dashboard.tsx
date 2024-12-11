@@ -13,8 +13,8 @@ export type BudgetData = {
 };
 
 export const Dashboard = () => {
-  const [totalSavings] = useState(2500);
-  const [monthlyBudget] = useState(4000);
+  const [totalSavings] = useState(0);
+  const [monthlyBudget] = useState(0);
   const [expenses, setExpenses] = useState<BudgetData[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
