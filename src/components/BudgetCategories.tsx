@@ -10,10 +10,12 @@ interface BudgetCategoriesProps {
 
 export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesProps) => {
   const calculateCategoryAmount = (categoryName: string) => {
-    if (!expenses.length) return 0;
+    if (!expenses?.length) return 0;
 
     return expenses.reduce((total, expense) => {
-      if (expense.category.toLowerCase() !== categoryName.toLowerCase()) return total;
+      if (!expense?.category || expense.category.toLowerCase() !== categoryName.toLowerCase()) {
+        return total;
+      }
       
       if (selectedDate) {
         const expenseDate = expense.date ? new Date(expense.date) : null;
@@ -21,13 +23,13 @@ export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesPro
         
         if (expenseDate.getMonth() === selectedDate.getMonth() && 
             expenseDate.getFullYear() === selectedDate.getFullYear()) {
-          return total + Number(expense.amount);
+          return total + Number(expense.amount || 0);
         }
         return total;
       }
       
       // If no date is selected, sum all expenses for this category
-      return total + Number(expense.amount);
+      return total + Number(expense.amount || 0);
     }, 0);
   };
 
