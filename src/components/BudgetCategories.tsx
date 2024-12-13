@@ -26,6 +26,7 @@ export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesPro
         return total;
       }
       
+      // If no date is selected, sum all expenses for this category
       return total + Number(expense.amount);
     }, 0);
   };

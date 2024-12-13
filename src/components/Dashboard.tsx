@@ -14,8 +14,6 @@ export type BudgetData = {
 };
 
 export const Dashboard = () => {
-  const [totalSavings, setTotalSavings] = useState(0);
-  const [monthlyBudget, setMonthlyBudget] = useState(0);
   const [expenses, setExpenses] = useState<BudgetData[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -23,37 +21,39 @@ export const Dashboard = () => {
   const handleBudgetSubmit = (data: BudgetData) => {
     const newData = { ...data, date: new Date() };
     setExpenses(prev => [...prev, newData]);
-    
-    // Update monthly budget and total savings based on category
-    const amount = Number(data.amount);
-    if (data.category === 'income') {
-      setMonthlyBudget(prev => prev + amount);
-    } else {
-      if (data.category === 'savings') {
-        setTotalSavings(prev => prev + amount);
-      }
-    }
-    
     console.log("Budget data submitted:", newData);
   };
 
   const calculateMonthlyTotals = (date?: Date) => {
-    if (!date) return { income: 0, expenses: 0, savings: 0 };
-
+    if (!expenses.length) return { income: 0, expenses: 0, savings: 0 };
+    
     return expenses.reduce((acc, expense) => {
-      if (!expense.date) return acc;
+      const amount = Number(expense.amount);
       
-      const expenseDate = new Date(expense.date);
-      if (expenseDate.getMonth() === date.getMonth() && 
-          expenseDate.getFullYear() === date.getFullYear()) {
-        const amount = Number(expense.amount);
-        
+      // If no date is selected, include all expenses
+      if (!date) {
         if (expense.category === 'income') {
           acc.income += amount;
-        } else if (expense.category === 'savings') {
-          acc.savings += amount;
-          acc.expenses += amount;
         } else {
+          if (expense.category === 'savings') {
+            acc.savings += amount;
+          }
+          acc.expenses += amount;
+        }
+        return acc;
+      }
+      
+      // If date is selected, only include expenses from the same month and year
+      const expenseDate = expense.date ? new Date(expense.date) : null;
+      if (expenseDate && 
+          expenseDate.getMonth() === date.getMonth() && 
+          expenseDate.getFullYear() === date.getFullYear()) {
+        if (expense.category === 'income') {
+          acc.income += amount;
+        } else {
+          if (expense.category === 'savings') {
+            acc.savings += amount;
+          }
           acc.expenses += amount;
         }
       }
@@ -62,7 +62,6 @@ export const Dashboard = () => {
   };
 
   const monthlyTotals = calculateMonthlyTotals(selectedDate);
-  const totalExpenses = monthlyTotals.expenses;
 
   const handleDateChange = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -87,7 +86,7 @@ export const Dashboard = () => {
             <p className="text-sm text-gray-600">Total Savings</p>
             <div className="flex items-center space-x-2">
               <Flag className="w-5 h-5 text-red-500" />
-              <h2 className="text-3xl font-bold animate-number-scroll">
+              <h2 className="text-3xl font-bold">
                 CHF {monthlyTotals.savings.toLocaleString()}
               </h2>
             </div>
@@ -102,7 +101,9 @@ export const Dashboard = () => {
             <Calendar className="w-6 h-6 text-navy-400" />
             <div>
               <p className="text-sm text-gray-600">Monthly Budget</p>
-              <p className="text-xl font-semibold">CHF {monthlyTotals.income.toLocaleString()}</p>
+              <p className="text-xl font-semibold">
+                CHF {monthlyTotals.income.toLocaleString()}
+              </p>
             </div>
           </div>
         </Card>
@@ -112,7 +113,9 @@ export const Dashboard = () => {
             <CreditCard className="w-6 h-6 text-navy-400" />
             <div>
               <p className="text-sm text-gray-600">Total Expenses</p>
-              <p className="text-xl font-semibold">CHF {totalExpenses.toLocaleString()}</p>
+              <p className="text-xl font-semibold">
+                CHF {monthlyTotals.expenses.toLocaleString()}
+              </p>
             </div>
           </div>
         </Card>
