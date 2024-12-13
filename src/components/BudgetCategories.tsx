@@ -1,43 +1,76 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { DollarSign, Home, ShoppingCart, PiggyBank, Heart } from "lucide-react";
+import { BudgetData } from "./Dashboard";
 
-export const BudgetCategories = () => {
+interface BudgetCategoriesProps {
+  expenses: BudgetData[];
+  selectedDate?: Date;
+}
+
+export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesProps) => {
+  const calculateCategoryAmount = (categoryName: string) => {
+    if (!expenses.length) return 0;
+
+    return expenses.reduce((total, expense) => {
+      if (expense.category.toLowerCase() !== categoryName.toLowerCase()) return total;
+      
+      if (selectedDate) {
+        const expenseDate = expense.date ? new Date(expense.date) : null;
+        if (!expenseDate) return total;
+        
+        if (expenseDate.getMonth() === selectedDate.getMonth() && 
+            expenseDate.getFullYear() === selectedDate.getFullYear()) {
+          return total + Number(expense.amount);
+        }
+        return total;
+      }
+      
+      return total + Number(expense.amount);
+    }, 0);
+  };
+
+  const calculateProgress = (amount: number) => {
+    const totalIncome = calculateCategoryAmount('income');
+    if (totalIncome === 0) return 0;
+    return (amount / totalIncome) * 100;
+  };
+
   const categories = [
     {
       name: "Income",
-      amount: 0,
+      amount: calculateCategoryAmount('income'),
       icon: DollarSign,
       color: "text-green-500",
-      progress: 0,
+      progress: 100,
     },
     {
       name: "Fixed Costs",
-      amount: 0,
+      amount: calculateCategoryAmount('fixed'),
       icon: Home,
       color: "text-blue-500",
-      progress: 0,
+      progress: calculateProgress(calculateCategoryAmount('fixed')),
     },
     {
       name: "Variable Costs",
-      amount: 0,
+      amount: calculateCategoryAmount('variable'),
       icon: ShoppingCart,
       color: "text-orange-500",
-      progress: 0,
+      progress: calculateProgress(calculateCategoryAmount('variable')),
     },
     {
       name: "Savings",
-      amount: 0,
+      amount: calculateCategoryAmount('savings'),
       icon: PiggyBank,
       color: "text-gold-300",
-      progress: 0,
+      progress: calculateProgress(calculateCategoryAmount('savings')),
     },
     {
       name: "Donations",
-      amount: 0,
+      amount: calculateCategoryAmount('donations'),
       icon: Heart,
       color: "text-red-500",
-      progress: 0,
+      progress: calculateProgress(calculateCategoryAmount('donations')),
     },
   ];
 

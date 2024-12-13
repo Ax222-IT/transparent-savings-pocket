@@ -5,9 +5,10 @@ import { BudgetData } from "./Dashboard";
 
 type ExpenseCalendarProps = {
   expenses: BudgetData[];
+  onDateChange: (date: Date | undefined) => void;
 };
 
-export const ExpenseCalendar = ({ expenses }: ExpenseCalendarProps) => {
+export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   // Convert expenses array to a map of date strings to total amounts
@@ -19,13 +20,18 @@ export const ExpenseCalendar = ({ expenses }: ExpenseCalendarProps) => {
     return acc;
   }, {} as { [key: string]: number });
 
+  const handleDateSelect = (newDate: Date | undefined) => {
+    setDate(newDate);
+    onDateChange(newDate);
+  };
+
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">Expense Calendar</h2>
       <Calendar
         mode="single"
         selected={date}
-        onSelect={setDate}
+        onSelect={handleDateSelect}
         className="rounded-md border"
         modifiers={{
           hasExpense: (date) => {
