@@ -49,13 +49,18 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
             const dateStr = date.toISOString().split("T")[0];
             return dateStr in expensesByDate;
           },
+          selected: (date) => {
+            return date.toISOString().split("T")[0] === date?.toISOString().split("T")[0];
+          }
         }}
         modifiersStyles={{
           hasExpense: {
+            fontWeight: "bold"
+          },
+          selected: {
             backgroundColor: "#FFD700",
             color: "#1A237E",
-            fontWeight: "bold",
-          },
+          }
         }}
       />
       {date && (
