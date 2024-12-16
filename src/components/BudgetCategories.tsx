@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { DollarSign, Home, ShoppingCart, PiggyBank, Heart } from "lucide-react";
+import { DollarSign, Home, ShoppingCart, PiggyBank, Heart, MoreVertical } from "lucide-react";
 import { BudgetData } from "./Dashboard";
 
 interface BudgetCategoriesProps {
@@ -15,7 +15,10 @@ export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesPro
     const currentDate = selectedDate || new Date();
     
     return expenses.reduce((total, expense) => {
-      if (!expense?.category || expense.category.toLowerCase() !== categoryName.toLowerCase()) {
+      // If no category is set, count it as "other"
+      const expenseCategory = expense?.category || "other";
+      
+      if (expenseCategory.toLowerCase() !== categoryName.toLowerCase()) {
         return total;
       }
       
@@ -73,6 +76,13 @@ export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesPro
       icon: Heart,
       color: "text-red-500",
       progress: calculateProgress(calculateCategoryAmount('donations')),
+    },
+    {
+      name: "Other",
+      amount: calculateCategoryAmount('other'),
+      icon: MoreVertical,
+      color: "text-gray-500",
+      progress: calculateProgress(calculateCategoryAmount('other')),
     },
   ];
 

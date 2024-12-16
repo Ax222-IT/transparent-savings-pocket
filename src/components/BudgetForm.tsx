@@ -55,6 +55,7 @@ export const BudgetForm = ({ open, onOpenChange, onSubmit }: BudgetFormProps) =>
                         <SelectItem value="variable">Variable Costs</SelectItem>
                         <SelectItem value="savings">Savings</SelectItem>
                         <SelectItem value="donations">Donations</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
