@@ -14,7 +14,12 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
   // Convert expenses array to a map of date strings to total amounts
   const expensesByDate = expenses.reduce((acc, expense) => {
     if (expense.date) {
-      const dateStr = new Date(expense.date).toISOString().split('T')[0];
+      // Handle the complex date object structure
+      const expenseDate = expense.date instanceof Date 
+        ? expense.date 
+        : new Date((expense.date as any).value?.iso || expense.date);
+      
+      const dateStr = expenseDate.toISOString().split('T')[0];
       acc[dateStr] = (acc[dateStr] || 0) + Number(expense.amount);
     }
     return acc;
