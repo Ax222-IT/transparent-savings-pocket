@@ -12,24 +12,23 @@ export const BudgetCategories = ({ expenses, selectedDate }: BudgetCategoriesPro
   const calculateCategoryAmount = (categoryName: string) => {
     if (!expenses?.length) return 0;
 
+    const currentDate = selectedDate || new Date();
+    
     return expenses.reduce((total, expense) => {
       if (!expense?.category || expense.category.toLowerCase() !== categoryName.toLowerCase()) {
         return total;
       }
       
-      if (selectedDate) {
-        const expenseDate = expense.date ? new Date(expense.date) : null;
-        if (!expenseDate) return total;
-        
-        if (expenseDate.getMonth() === selectedDate.getMonth() && 
-            expenseDate.getFullYear() === selectedDate.getFullYear()) {
-          return total + Number(expense.amount || 0);
-        }
-        return total;
+      const expenseDate = expense.date ? new Date(expense.date) : null;
+      if (!expenseDate) return total;
+      
+      // Always filter by month and year
+      if (expenseDate.getMonth() === currentDate.getMonth() && 
+          expenseDate.getFullYear() === currentDate.getFullYear()) {
+        return total + Number(expense.amount || 0);
       }
       
-      // If no date is selected, sum all expenses for this category
-      return total + Number(expense.amount || 0);
+      return total;
     }, 0);
   };
 
