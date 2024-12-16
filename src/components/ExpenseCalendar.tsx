@@ -14,7 +14,7 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
   // Convert expenses array to a map of date strings to total amounts
   const expensesByDate = expenses.reduce((acc, expense) => {
     if (expense.date) {
-      const dateStr = expense.date.toISOString().split('T')[0];
+      const dateStr = new Date(expense.date).toISOString().split('T')[0];
       acc[dateStr] = (acc[dateStr] || 0) + Number(expense.amount);
     }
     return acc;
@@ -23,6 +23,12 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
   const handleDateSelect = (newDate: Date | undefined) => {
     setDate(newDate);
     onDateChange(newDate);
+  };
+
+  const getExpenseForDate = (selectedDate: Date | undefined) => {
+    if (!selectedDate) return 0;
+    const dateStr = selectedDate.toISOString().split("T")[0];
+    return expensesByDate[dateStr] || 0;
   };
 
   return (
@@ -53,7 +59,7 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
             Expenses for {date.toLocaleDateString()}:
           </p>
           <p className="text-lg font-semibold">
-            CHF {expensesByDate[date.toISOString().split("T")[0]]?.toLocaleString() || 0}
+            CHF {getExpenseForDate(date).toLocaleString()}
           </p>
         </div>
       )}
