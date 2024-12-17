@@ -48,9 +48,6 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
           hasExpense: (date) => {
             const dateStr = date.toISOString().split("T")[0];
             return dateStr in expensesByDate;
-          },
-          selected: (date) => {
-            return date.toISOString().split("T")[0] === date?.toISOString().split("T")[0];
           }
         }}
         modifiersStyles={{
@@ -59,7 +56,7 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
           },
           selected: {
             backgroundColor: "#FFD700",
-            color: "#1A237E",
+            color: "#1A237E"
           }
         }}
       />
