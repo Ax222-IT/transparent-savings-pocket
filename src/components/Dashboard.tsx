@@ -1,10 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, PiggyBank, Calendar, CreditCard, Plus, Flag } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BudgetForm } from "./BudgetForm";
 import { ExpenseCalendar } from "./ExpenseCalendar";
 import { BudgetCategories } from "./BudgetCategories";
+import { toast } from "sonner";
 
 export type BudgetData = {
   amount: string;
@@ -17,6 +18,32 @@ export const Dashboard = () => {
   const [expenses, setExpenses] = useState<BudgetData[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+
+  // Charger les données au démarrage
+  useEffect(() => {
+    const savedExpenses = localStorage.getItem('pocketGoldExpenses');
+    if (savedExpenses) {
+      try {
+        const parsedExpenses = JSON.parse(savedExpenses).map((expense: any) => ({
+          ...expense,
+          date: expense.date ? new Date(expense.date) : undefined
+        }));
+        setExpenses(parsedExpenses);
+        toast.success("Données chargées avec succès");
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+        toast.error("Erreur lors du chargement des données");
+      }
+    }
+  }, []);
+
+  // Sauvegarder les données à chaque modification
+  useEffect(() => {
+    if (expenses.length > 0) {
+      localStorage.setItem('pocketGoldExpenses', JSON.stringify(expenses));
+      toast.success("Données sauvegardées");
+    }
+  }, [expenses]);
 
   const handleBudgetSubmit = (data: BudgetData) => {
     const newData = { ...data, date: new Date() };
