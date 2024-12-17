@@ -32,8 +32,27 @@ export const ExpenseCalendar = ({ expenses, onDateChange }: ExpenseCalendarProps
 
   const getExpenseForDate = (selectedDate: Date | undefined) => {
     if (!selectedDate) return 0;
+    
     const dateStr = selectedDate.toISOString().split("T")[0];
-    return expensesByDate[dateStr] || 0;
+    
+    // Filter expenses for the selected date and specified categories only
+    return expenses.reduce((total, expense) => {
+      if (!expense.date) return total;
+      
+      const expenseDate = expense.date instanceof Date 
+        ? expense.date 
+        : new Date((expense.date as any).value?.iso || expense.date);
+      
+      const expenseDateStr = expenseDate.toISOString().split("T")[0];
+      
+      // Only include expenses from specific categories
+      const allowedCategories = ['fixed', 'variable', 'donations', 'other'];
+      
+      if (expenseDateStr === dateStr && allowedCategories.includes(expense.category)) {
+        return total + Number(expense.amount);
+      }
+      return total;
+    }, 0);
   };
 
   return (
